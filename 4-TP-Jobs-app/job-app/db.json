@@ -1,0 +1,40 @@
+{
+  "jobs": [
+    {
+      "id": 1,
+      "title": "Senior Vue.js Developer",
+      "description": "We are looking for an experienced Vue.js developer to join our team. Must have 5+ years of experience with Vue 3.",
+      "salary": "$80,000 - $100,000",
+      "createdDate": "2025-12-01",
+      "yearsExperience": 5,
+      "location": "Remote"
+    },
+    {
+      "id": 2,
+      "title": "Full Stack JavaScript Developer",
+      "description": "Build web applications using Node.js and Vue.js. Work with MongoDB and PostgreSQL databases.",
+      "salary": "$60,000 - $80,000",
+      "createdDate": "2025-12-05",
+      "yearsExperience": 3,
+      "location": "Paris, France"
+    },
+    {
+      "id": 3,
+      "title": "Frontend Developer",
+      "description": "Join our frontend team and create amazing user interfaces. Knowledge of CSS and JavaScript required.",
+      "salary": "$50,000 - $70,000",
+      "createdDate": "2025-12-10",
+      "yearsExperience": 2,
+      "location": "Lyon, France"
+    },
+    {
+      "id": "502b",
+      "title": "sdfadsf",
+      "description": "asfadsf",
+      "salary": "asfasdf",
+      "createdDate": "2026-01-22",
+      "yearsExperience": 4,
+      "location": "dasdf"
+    }
+  ]
+}
