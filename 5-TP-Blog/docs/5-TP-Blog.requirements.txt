@@ -1,0 +1,28 @@
+Extracted from 5-TP-Blog.docx (original file was removed during scaffolding).
+
+Travaux pratiques DBJS
+Pr. Ahmed Bentajer
+
+Le but de ce TP est de créer une application blog qui permettra aux utilisateurs de visualiser, d’ajouter, de modifier et de supprimer des articles.
+
+L’application aura l’architecture suivante (que vous pouvez adapter selon votre vision) :
+
+Composants
+- NavBar.vue : Ce composant contiendra les différents liens de l’application (Home, addPost, EditPost)
+- PostList.vue : Ce composant servira pour afficher la liste des posts du blog, il a comme composant enfant SinglePost.vue
+- SinglePost.vue : ce composant sera utilisé dans le composant parent PostList pour afficher la liste des posts du blog avec les détails suivants :
+  - Titre du post
+  - Tags
+  - Snippet de l’article (valeur calculée: text.substring(0,50))
+  - Un router link permettant de faire une redirection vers la page (PostDetailView.vue) qui affiche l’article complet.
+- TagCloud.vue : Ce composant permettra d’afficher les différents tags utilisés dans les différents posts et les affiche à droit dans le PostList.vue et PostDetail.vue.
+  Chaque tag sera associé à un lien qui permettra d’afficher tous les articles qui y sont associés avec (/tags/:tag)
+
+Composables
+- getPosts.js : Qui permet de retourner tous les articles depuis la base de données
+- getPost.js : Qui permet de retourner un article en ayant son id
+
+Views
+- CreatePostView.vue : Cette page permettra d’ajouter un nouveau post via un formulaire (titre, body, tags)
+- PostDetailView.vue : Cette page affichera l’articles ainsi que les informations du composant TagCloud.vue
+- Home.vue : Cette page affiche la liste des articles en utilisant le composant PostList.vue et la liste des tags en utilisant TagCloud.vue
