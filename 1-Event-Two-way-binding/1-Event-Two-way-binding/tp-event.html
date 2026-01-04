@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>Manipulation de vue</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+
+
+<div id="monapp">
+	<!-- Exercice 1: bouton lié à la propriété titre -->
+	<button @click="cliquer">{{ titre }}</button>
+
+	<hr />
+
+	<!-- Exercice 2: compteur -->
+	<div>
+		<button @click="decrement">--</button>
+		<span style="display:inline-block; width:3rem; text-align:center">{{ compteur }}</span>
+		<button @click="increment">++</button>
+	</div>
+
+	<hr />
+
+	<!-- Exercice 3: input sans espace -->
+	<div>
+		<label for="noSpace">Saisissez (pas d'espace) :</label>
+		<input id="noSpace" v-model="inputText" @input="checkNoSpace" />
+		<p v-if="showReminder" style="color:crimson">Rappel : le texte ne doit pas contenir d'espaces.</p>
+	</div>
+</div>
+
+
+<script>
+const appli = {
+	data () {
+		return {
+			titre: 'Cliquez moi!',
+			compteur: 0
+			,inputText: '',
+			showReminder: false
+		}
+	},
+	methods: {
+		cliquer() {
+			this.titre = 'Cliqué!';
+		}
+		,
+		increment() {
+			this.compteur++;
+		},
+		decrement() {
+			this.compteur--;
+		}
+		,
+		checkNoSpace() {
+			this.showReminder = /\s/.test(this.inputText);
+		}
+	}
+};
+
+Vue.createApp(appli).mount("#monapp");
+</script>
+
+</body>
+</html>

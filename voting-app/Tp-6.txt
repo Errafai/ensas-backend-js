@@ -1,0 +1,40 @@
+TP-6
+Vous êtes chargé de développer une application web pour les étudiants de l’ENSA Safi. Cette application permettra aux étudiants de se connecter et de voter "Yes" ou "No" pour différents événements proposés. L'application doit utiliser Vue.js pour l'interface utilisateur et Firebase pour l'authentification et la gestion des données.
+Objectifs :
+1.	Authentification des utilisateurs :
+o	Implémentez l'authentification des utilisateurs à l'aide de Firebase Authentication. Les étudiants doivent pouvoir s'inscrire et se connecter à l'application en utilisant leur adresse e-mail universitaire.
+2.	Affichage des événements :
+o	Récupérez et affichez une liste d'événements depuis Firebase Firestore. Chaque événement doit afficher un titre, une description, une date et le nombre de votes "Yes" et "No".
+3.	Système de vote :
+o	Permettez aux étudiants de voter "Yes" ou "No" pour chaque événement. Un étudiant ne peut voter qu'une seule fois pour chaque événement. Mettez à jour les compteurs de votes en temps réel dans Firestore.
+4.	Interface utilisateur :
+o	Créez une interface utilisateur réactive et conviviale en utilisant Vue.js. Assurez-vous que l'application soit accessible et utilisable sur différents appareils (ordinateurs, tablettes, smartphones).
+Instructions :
+1.	Système de vote :
+o	Implémentez une fonction pour permettre aux utilisateurs de voter "Yes" ou "No" pour chaque événement.
+o	Assurez-vous qu'un utilisateur ne puisse voter qu'une seule fois pour chaque événement.
+o	Mettez à jour les compteurs de votes en temps réel dans Firestore.
+2.	Déploiement de l’application
+L’application doit être déployé dans firebase
+Exemple type de collection (à adapter selon votre besoin)
+Collection Events
+{
+ "img": urlImage
+  "title": "Concert de fin d'année",
+  "description": "Un concert pour célébrer la fin de l'année universitaire.",
+  "date": "2024-07-01T18:00:00Z",
+  "isFree": TRUE // FALSE
+  "Price": 100
+  "yesVotes": 100,
+  "noVotes": 20,
+  "createdAt": "2024-06-20T12:00:00Z",
+  "updatedAt": "2024-06-25T15:30:00Z"
+}
+	Collection Votes
+{
+  "eventId": "event123",
+  "userId": "user456",
+  "vote": "yes", // ou "no"
+  "createdAt": "2024-06-25T15:30:00Z"
+}
+

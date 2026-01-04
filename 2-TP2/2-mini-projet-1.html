@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projet 1-38</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        img {
+            float: left;
+            margin-right: 1rem;
+        }
+        .personne {
+            clear: left;
+            padding: 1rem;
+        }
+        input[type="checkbox"], select {
+            margin-right: 1rem;
+        }
+        .misEnForme {
+            background: #e0ffff;
+            font-family: georgia;
+            font-size: 1.2rem;
+            margin: 1rem;
+        }
+        .img-small { width: 50px; height: auto; }
+        .img-medium { width: 100px; height: auto; }
+        .img-large { width: 180px; height: auto; }
+        .contacts { margin-top: 0.5rem; }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <fieldset>
+            <legend>Filtre sur le nom</legend>
+            <input type="text" v-model="filtreNom" placeholder="Tapez une partie du nom...">
+        </fieldset>
+        <fieldset>
+            <legend>Options</legend>
+            Homme <input type="checkbox" v-model="homme">
+            Femme <input type="checkbox" v-model="femme">
+            Téléphone <input type="checkbox" v-model="afficherTel" >
+            Email <input type="checkbox" v-model="afficherEmail">
+            Photo
+            <select v-model.number="taille">
+                <option :value="1">Petit</option>
+                <option :value="2">Moyen</option>
+                <option :value="3">Grand</option>
+            </select>
+            Mise en forme <input type="checkbox" v-model="mef" >
+        </fieldset>
+        <div class="personne" 
+             v-for="(p, idx) in personnesFiltered"
+             :key="idx"
+             :class="{'misEnForme': mef}"
+        >
+            <div>
+                <img :src="p.picture[imgSizeField]" :class="imgClass">
+                <strong>{{p.name.title}} {{p.name.first}} {{p.name.last}}</strong><br>
+                <div>{{p.location.country}}</div>
+                <div class="contacts">
+                    <!-- contacts are sensitive: show masked by default -->
+                    <div>
+                        Téléphone: <span>{{ revealed[idx] || afficherTel ? p.phone : masked(p.phone, false) }}</span>
+                    </div>
+                    <div>
+                        Email: <span>{{ revealed[idx] || afficherEmail ? p.email : masked(p.email, false) }}</span>
+                    </div>
+                    <button @click="toggleReveal(idx)">{{ revealed[idx] ? 'Cacher' : 'Afficher' }} contacts</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    homme: true,
+                    femme: true,
+                    afficherTel: true,
+                    afficherEmail: true,
+                    mef: false,
+                    taille: 2,
+                    filtreNom: '',
+                    personnes: [],
+                    revealed: {} // per-person reveal state
+                }
+            },
+            computed: {
+                personnesFiltered() {
+                    const nom = this.filtreNom.trim().toLowerCase();
+                    return this.personnes.filter(p => {
+                        const isHomme = p.name.title === 'Mr' || p.gender === 'male';
+                        const isFemme = p.name.title === 'Mrs' || p.gender === 'female';
+                        if (!( (this.homme && isHomme) || (this.femme && isFemme) )) return false;
+                        if (nom === '') return true;
+                        const last = (p.name.last || '').toLowerCase();
+                        const first = (p.name.first || '').toLowerCase();
+                        return last.indexOf(nom) >= 0 || first.indexOf(nom) >= 0;
+                    });
+                },
+                imgSizeField() {
+                    // map taille number to picture field
+                    return this.taille === 1 ? 'thumbnail' : (this.taille === 2 ? 'medium' : 'large');
+                },
+                imgClass() {
+                    return this.taille === 1 ? 'img-small' : (this.taille === 2 ? 'img-medium' : 'img-large');
+                }
+            },
+            methods: {
+                masked(value, allowed) {
+                    // If allowed or this person has been revealed for this value, show full
+                    if (!value) return '';
+                    if (allowed) return value;
+                    // mask middle part of email or phone
+                    if (value.indexOf('@') >= 0) {
+                        const parts = value.split('@');
+                        const name = parts[0];
+                        const maskedName = name.length <= 2 ? '*'.repeat(name.length) : name[0] + '*'.repeat(Math.max(1, name.length-2)) + name[name.length-1];
+                        return maskedName + '@' + parts[1];
+                    }
+                    // phone: keep first and last 2 chars
+                    const cleaned = value.replace(/\s+/g, '');
+                    if (cleaned.length <= 4) return '*'.repeat(cleaned.length);
+                    return cleaned.substr(0,2) + '*'.repeat(Math.max(2, cleaned.length-4)) + cleaned.substr(cleaned.length-2);
+                },
+                toggleReveal(idx) {
+                    this.$set(this.revealed, idx, !this.revealed[idx]);
+                    // when revealed, temporarily override masked display by setting allowed flags per person
+                    // We'll implement per-call check: if revealed[idx] is true, show full contact
+                },
+                async loadPersonnes() {
+                    try {
+                        const res = await fetch('personnes.json');
+                        if (!res.ok) throw new Error('Erreur lors du chargement: ' + res.status);
+                        const data = await res.json();
+                        this.personnes = data;
+                        // initialize revealed map
+                        this.personnes.forEach((_, i) => this.$set(this.revealed, i, false));
+                    } catch (err) {
+                        console.error(err);
+                        // fallback: keep personnes empty
+                    }
+                }
+            },
+            mounted() {
+                this.loadPersonnes();
+            }
+        });
+        // small mixin to allow Vue 3 set on reactive object
+        app.mixin({ methods: { $set(obj, key, val) { this.$data; obj[key] = val; } } });
+        app.mount('#app');
+    </script>
+</body>
+
+</html>
