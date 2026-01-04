@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TP3 - Task List</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 1.25rem;
+        }
+
+        #app {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .toolbarSpacer {
+            flex: 1;
+        }
+
+        .filterBtn {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .filterBtn.active {
+            background: #e0ffff;
+        }
+
+        .task {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+        }
+
+        .task.completed {
+            opacity: 0.7;
+        }
+
+        .taskTitle {
+            font-weight: 600;
+        }
+
+        .taskMeta {
+            font-size: 0.9rem;
+            color: #444;
+            margin-top: 0.25rem;
+        }
+
+        .actions {
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <task-list></task-list>
+    </div>
+    <script>
+        const FILTERS = Object.freeze({
+            TODO: 'todo',
+            DONE: 'done'
+        });
+
+        const TaskList = {
+            name: 'TaskList',
+            template: `
+                <div>
+                    <h1>Gestion de tâches</h1>
+
+                    <div class="toolbar">
+                        <button
+                            type="button"
+                            class="filterBtn"
+                            :class="{ active: filter === FILTERS.TODO }"
+                            :aria-pressed="filter === FILTERS.TODO"
+                            @click="setFilter(FILTERS.TODO)"
+                        >À faire</button>
+
+                        <button
+                            type="button"
+                            class="filterBtn"
+                            :class="{ active: filter === FILTERS.DONE }"
+                            :aria-pressed="filter === FILTERS.DONE"
+                            @click="setFilter(FILTERS.DONE)"
+                        >Terminées</button>
+
+                        <div class="toolbarSpacer"></div>
+                        <div>Total tâches: <strong>{{ totalTasks }}</strong></div>
+                    </div>
+
+                    <div v-if="loading">Chargement…</div>
+                    <div v-else-if="error" style="color:#b00020;">{{ error }}</div>
+
+                    <div v-else>
+                        <div
+                            class="task"
+                            v-for="task in filteredTasks"
+                            :key="task.id"
+                            :class="{ completed: task.completed }"
+                        >
+                            <div class="taskTitle">{{ task.title }}</div>
+                            <div class="taskMeta">{{ task.description }}</div>
+                            <div class="taskMeta">État: {{ task.completed ? 'Terminée' : 'À faire' }}</div>
+
+                            <div class="actions">
+                                <button
+                                    type="button"
+                                    v-show="!task.completed"
+                                    @click="markCompleted(task)"
+                                >Marquer comme terminée</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            setup() {
+                const { ref, computed, onMounted } = Vue;
+
+                const tasks = ref([]);
+                const filter = ref(FILTERS.TODO);
+                const loading = ref(true);
+                const error = ref('');
+
+                const totalTasks = computed(() => tasks.value.length);
+
+                const filteredTasks = computed(() => {
+                    if (filter.value === FILTERS.TODO) {
+                        return tasks.value.filter(t => !t.completed);
+                    }
+                    if (filter.value === FILTERS.DONE) {
+                        return tasks.value.filter(t => t.completed);
+                    }
+                    return tasks.value;
+                });
+
+                function setFilter(nextFilter) {
+                    filter.value = nextFilter;
+                }
+
+                function markCompleted(task) {
+                    task.completed = true;
+                }
+
+                async function loadTasks() {
+                    try {
+                        const res = await fetch('./taskList.json', { cache: 'no-store' });
+                        if (!res.ok) {
+                            throw new Error(`HTTP ${res.status}`);
+                        }
+                        const data = await res.json();
+                        tasks.value = Array.isArray(data) ? data : [];
+                    } catch {
+                        error.value = 'Impossible de charger taskList.json. Ouvre la page via un serveur local (pas en file://).';
+                    } finally {
+                        loading.value = false;
+                    }
+                }
+
+                onMounted(loadTasks);
+
+                return {
+                    FILTERS,
+                    tasks,
+                    filter,
+                    loading,
+                    error,
+                    totalTasks,
+                    filteredTasks,
+                    setFilter,
+                    markCompleted
+                };
+            }
+        };
+
+        const app = Vue.createApp({});
+        app.component('task-list', TaskList);
+        app.mount('#app');
+    </script>
+</body>
+
+</html>
