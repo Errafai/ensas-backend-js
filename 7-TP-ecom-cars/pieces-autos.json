@@ -1,0 +1,202 @@
+[
+    {
+        "id": 1,
+        "nom": "Batterie 12V",
+        "prix": 120,
+        "categorie": "Électricité",
+        "image": "https://images.unsplash.com/photo-1609621838510-5ad474b7d25d?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 2,
+        "nom": "Filtre à huile",
+        "prix": 15,
+        "categorie": "Filtration",
+        "image": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 3,
+        "nom": "Bougies d'allumage (x4)",
+        "prix": 35,
+        "categorie": "Moteur",
+        "image": "https://images.unsplash.com/photo-1625047509168-a7026f36de04?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 4,
+        "nom": "Disques de frein (x2)",
+        "prix": 80,
+        "categorie": "Freinage",
+        "image": "https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 5,
+        "nom": "Courroie de distribution",
+        "prix": 90,
+        "categorie": "Moteur",
+        "image": "https://images.unsplash.com/photo-1632823469663-d374e0a0e364?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 6,
+        "nom": "Pompe à eau",
+        "prix": 70,
+        "categorie": "Refroidissement",
+        "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 7,
+        "nom": "Amortisseurs arrière (x2)",
+        "prix": 150,
+        "categorie": "Suspension",
+        "image": "https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 8,
+        "nom": "Filtre à air",
+        "prix": 20,
+        "categorie": "Filtration",
+        "image": "https://images.unsplash.com/photo-1613214149929-7e4e48b08139?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 9,
+        "nom": "Capteur ABS",
+        "prix": 50,
+        "categorie": "Sécurité",
+        "image": "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 10,
+        "nom": "Radiateur de refroidissement",
+        "prix": 130,
+        "categorie": "Refroidissement",
+        "image": "https://images.unsplash.com/photo-1621276567886-3e44f8f9b0d4?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 11,
+        "nom": "Alternateur",
+        "prix": 200,
+        "categorie": "Électricité",
+        "image": "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 12,
+        "nom": "Démarreur",
+        "prix": 180,
+        "categorie": "Électricité",
+        "image": "https://images.unsplash.com/photo-1599420186946-7b6fb4e297f0?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 13,
+        "nom": "Kit d'embrayage",
+        "prix": 220,
+        "categorie": "Transmission",
+        "image": "https://images.unsplash.com/photo-1614359036614-3e5e6a8c4d92?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 14,
+        "nom": "Injecteur de carburant",
+        "prix": 110,
+        "categorie": "Moteur",
+        "image": "https://images.unsplash.com/photo-1619642305062-3dd06ec4e8f1?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 15,
+        "nom": "Pompe à carburant",
+        "prix": 90,
+        "categorie": "Carburant",
+        "image": "https://images.unsplash.com/photo-1628745277861-0e67f4d7ef5e?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 16,
+        "nom": "Capteur de pression des pneus (TPMS)",
+        "prix": 45,
+        "categorie": "Sécurité",
+        "image": "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 17,
+        "nom": "Rétroviseur extérieur",
+        "prix": 60,
+        "categorie": "Carrosserie",
+        "image": "https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 18,
+        "nom": "Échappement complet",
+        "prix": 250,
+        "categorie": "Échappement",
+        "image": "https://images.unsplash.com/photo-1632823471675-58f1d60e49e1?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 19,
+        "nom": "Vanne EGR",
+        "prix": 140,
+        "categorie": "Moteur",
+        "image": "https://images.unsplash.com/photo-1632823469978-e4a704e97df5?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 20,
+        "nom": "Turbo",
+        "prix": 400,
+        "categorie": "Moteur",
+        "image": "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 21,
+        "nom": "Joint de culasse",
+        "prix": 75,
+        "categorie": "Moteur",
+        "image": "https://images.unsplash.com/photo-1625047508956-022a87e7a9f1?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 22,
+        "nom": "Boîtier de direction",
+        "prix": 300,
+        "categorie": "Direction",
+        "image": "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 23,
+        "nom": "Silent bloc de suspension",
+        "prix": 35,
+        "categorie": "Suspension",
+        "image": "https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 24,
+        "nom": "Cardan de transmission",
+        "prix": 160,
+        "categorie": "Transmission",
+        "image": "https://images.unsplash.com/photo-1614359036614-3e5e6a8c4d92?w=500&h=400&fit=crop",
+        "disponible": true
+    },
+    {
+        "id": 25,
+        "nom": "Capteur de position vilebrequin",
+        "prix": 50,
+        "categorie": "Moteur",
+        "image": "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=500&h=400&fit=crop",
+        "disponible": true
+    }
+]

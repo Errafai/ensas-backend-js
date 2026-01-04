@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Les Bonnes Pièces - E-commerce</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div id="app">
+    <div v-if="loading" class="loading">
+      <div class="loading-spinner">⚙️</div>
+      <p>Chargement des pièces auto...</p>
+    </div>
+
+    <div v-if="!loading && showInstructions" class="instructions">
+      <h3>📋 Comment utiliser votre fichier JSON ?</h3>
+      <p><strong>Option 1 (Recommandée) :</strong> Créez un fichier <code>pieces-auto.json</code> dans le même dossier</p>
+      <p><strong>Option 2 :</strong> L'application utilise les données de démonstration incluses</p>
+    </div>
+
+    <template v-if="!loading">
+      <!-- Header -->
+      <header>
+        <div class="logo-section">
+          <div class="logo">🚗</div>
+          <h1>Les Bonnes Pièces</h1>
+        </div>
+        <div class="panier-badge">🛒 {{ panier.length }} article(s)</div>
+      </header>
+
+      <!-- Filtres -->
+      <div class="filtres-container">
+        <h2 class="filtres-title">🔍 Recherche & Filtres</h2>
+        <div class="filtres-grid">
+          <div class="filtre-group">
+            <label>Rechercher</label>
+            <input type="text" v-model="searchTerm" placeholder="Nom de la pièce...">
+          </div>
+
+          <div class="filtre-group">
+            <label>Catégorie</label>
+            <select v-model="selectedCategory">
+              <option value="">Toutes les catégories</option>
+              <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+            </select>
+          </div>
+
+          <div class="filtre-group">
+            <label>Trier par prix</label>
+            <select v-model="sortOrder">
+              <option value="">Par défaut</option>
+              <option value="asc">Prix croissant ↑</option>
+              <option value="desc">Prix décroissant ↓</option>
+            </select>
+          </div>
+
+          <div class="filtre-group">
+            <div class="checkbox-group">
+              <input type="checkbox" id="dispo" v-model="onlyAvailable">
+              <label for="dispo">✅ Disponible uniquement</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-bar">
+        <div class="stat-item">📦 {{ filteredPieces.length }} pièce(s) trouvée(s)</div>
+        <div class="stat-item">💰 Total panier: {{ totalPrix.toFixed(2) }} €</div>
+      </div>
+
+      <!-- Produits -->
+      <div v-if="filteredPieces.length" class="products-grid">
+        <div v-for="piece in filteredPieces" :key="piece.id" class="product-card" :data-category="sanitizeCategory(piece.categorie)">
+          <div class="product-image">
+            <img v-if="piece.image" :src="piece.image" :alt="piece.nom">
+            <span v-else style="font-size: 60px;">🔧</span>
+            <span class="stock-badge" :class="piece.disponible ? 'disponible' : 'rupture'">
+              {{ piece.disponible ? '✓ En stock' : '✗ Rupture' }}
+            </span>
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">{{ piece.nom }}</h3>
+            <span class="product-category">{{ piece.categorie }}</span>
+            <div class="product-price">{{ piece.prix.toFixed(2) }} €</div>
+            <button class="add-to-cart-btn" :disabled="!piece.disponible" @click="ajouterAuPanier(piece)">
+              {{ piece.disponible ? '🛒 Ajouter au panier' : '❌ Indisponible' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-else class="no-results">
+        <div class="no-results-icon">🔍</div>
+        <h3>Aucune pièce trouvée</h3>
+        <p>Essayez de modifier vos critères de recherche</p>
+      </div>
+
+      <!-- Panier -->
+      <div class="cart-section">
+        <h2 class="cart-title">🛒 Mon Panier</h2>
+        <div v-if="!panier.length" class="cart-empty">Votre panier est vide 🛍️</div>
+
+        <ul v-else class="cart-items">
+          <li v-for="(item, i) in panier" :key="i" class="cart-item">
+            <div class="item-info">
+              <div class="item-icon">
+                <img v-if="item.image" :src="item.image" :alt="item.nom">
+                <span v-else>🔧</span>
+              </div>
+              <div class="item-details">
+                <h4>{{ item.nom }}</h4>
+                <p>{{ item.categorie }}</p>
+              </div>
+            </div>
+            <span class="item-price">{{ item.prix.toFixed(2) }} €</span>
+            <button class="remove-btn" @click="retirerDuPanier(i)">✕ Retirer</button>
+          </li>
+        </ul>
+
+        <div v-if="panier.length" class="cart-total">
+          <span class="total-label">Total:</span>
+          <span class="total-amount">{{ totalPrix.toFixed(2) }} €</span>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <script>
+    const { createApp, ref, computed, onMounted } = Vue;
+
+    createApp({
+      setup() {
+        const pieces = ref([]);
+        const searchTerm = ref('');
+        const selectedCategory = ref('');
+        const onlyAvailable = ref(false);
+        const sortOrder = ref('');
+        const panier = ref([]);
+        const loading = ref(true);
+        const showInstructions = ref(false);
+
+        onMounted(async () => {
+          try {
+            const res = await fetch('./pieces-autos.json');
+            if (!res.ok) throw new Error('Fichier manquant');
+            pieces.value = await res.json();
+          } catch {
+            showInstructions.value = true;
+            console.warn("⚠️ Fichier JSON non trouvé, aucune donnée chargée");
+          } finally {
+            loading.value = false;
+          }
+        });
+
+        const categories = computed(() => [...new Set(pieces.value.map(p => p.categorie))]);
+        const filteredPieces = computed(() => {
+          let list = pieces.value.filter(p => p.disponible || !onlyAvailable.value);
+          if (searchTerm.value) {
+            const term = searchTerm.value.toLowerCase();
+            list = list.filter(p => p.nom.toLowerCase().includes(term) || p.categorie.toLowerCase().includes(term));
+          }
+          if (selectedCategory.value)
+            list = list.filter(p => p.categorie === selectedCategory.value);
+          if (sortOrder.value === 'asc') list.sort((a, b) => a.prix - b.prix);
+          if (sortOrder.value === 'desc') list.sort((a, b) => b.prix - a.prix);
+          return list;
+        });
+
+        const ajouterAuPanier = p => p.disponible && panier.value.push(p);
+        const retirerDuPanier = i => panier.value.splice(i, 1);
+        const totalPrix = computed(() => panier.value.reduce((s, p) => s + p.prix, 0));
+        const sanitizeCategory = cat => cat.toLowerCase().replace(/\s+/g, '-').replace(/[éè]/g, 'e');
+
+        return { pieces, searchTerm, selectedCategory, onlyAvailable, sortOrder, panier, loading, showInstructions, categories, filteredPieces, ajouterAuPanier, retirerDuPanier, totalPrix, sanitizeCategory };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
